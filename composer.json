@@ -1,0 +1,40 @@
+{
+  "name": "tools4schools/settings",
+  "description": "The Tools4schools Students package.",
+
+  "homepage": "https://tools4schools.org",
+  "support": {
+    "issues": "https://github.com/taftse/tools4schools/issues",
+    "source": "https://github.com/taftse/tools4schools"
+  },
+  "authors": [
+    {
+      "name": "Timothy Seebus",
+      "email": "timothyseebus@tools4schools.org"
+    }
+  ],
+  "require": {
+    "php": "^7.1.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tools4Schools\\Settings\\": "src/"
+    }
+  },
+
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Tools4Schools\\Settings\\Providers\\SettingsManagerServiceProvider"
+      ],
+      "aliases": {
+        "Setting": "Tools4Schools\\Settings\\Facade\\Setting"
+      }
+    }
+  },
+
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev"
+}

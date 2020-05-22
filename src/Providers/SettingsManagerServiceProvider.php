@@ -50,7 +50,7 @@ class SettingsManagerServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../../database/migrations/' => database_path('migrations')
-        ], 'migrations');
+        ], 't4s-settings');
     }
 
     public function provides()

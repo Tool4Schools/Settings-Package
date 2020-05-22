@@ -31,7 +31,7 @@ abstract class SettingsRepository implements Repository
         }
 
         if (! is_null($this->settings[$name])) {
-            return $this->settings[$name];
+            return $this->settings[$name]->value;
         }
     }
 

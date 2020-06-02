@@ -25,11 +25,12 @@ class EloquentRepository extends SettingsRepository
 
     public function set(string $key, $value = null,$type = null)
     {
-        $setting = new Setting(['key'=>$key]);
+        $setting = new Setting(['key'=>$key,'value'=>null]);
+
 
         if($this->has($key))
         {
-            $setting = $this->get($key);
+            $setting = $this->getModel($key);
         }
         $setting->value = $value;
 

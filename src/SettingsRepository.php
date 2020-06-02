@@ -19,8 +19,19 @@ abstract class SettingsRepository implements Repository
         {
             $this->loadSettings();
         }
-
         return isset($this->settings[$key]);
+    }
+
+    public function getModel(string $name,$default = null)
+    {
+        if(is_null($this->settings))
+        {
+            $this->loadSettings();
+        }
+
+        if (! is_null($this->settings[$name])) {
+            return $this->settings[$name];
+        }
     }
 
     public function get(string $name,$default = null)

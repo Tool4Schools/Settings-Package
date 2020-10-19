@@ -3,6 +3,8 @@
 
 namespace Tools4Schools\Settings;
 
+use Illuminate\Cache\CacheManager;
+use Illuminate\Foundation\Application;
 use InvalidArgumentException;
 
 class SettingsManager
@@ -28,7 +30,7 @@ class SettingsManager
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return void
      */
-    public function __construct($app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }

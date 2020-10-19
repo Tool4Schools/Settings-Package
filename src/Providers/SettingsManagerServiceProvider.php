@@ -2,6 +2,7 @@
 
 namespace Tools4Schools\Settings\Providers;
 
+use Illuminate\Cache\CacheManager;
 use Illuminate\Support\ServiceProvider;
 use Tools4Schools\Settings\APIRepository;
 use Tools4Schools\Settings\EloquentRepository;
@@ -21,14 +22,31 @@ class SettingsManagerServiceProvider extends ServiceProvider
             __DIR__.'/../../config/settings.php', 'settings'
         );
 
-        $this->app->singleton(SettingsManager::class,function ($app){
-            return new SettingsManager($app);
+
+
+
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot(SettingsManager $settingsManager,CacheManager $cacheManager)
+    {
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+
+        $this->publishes([
+            __DIR__.'/../../database/migrations/' => database_path('migrations')
+        ], 't4s-settings');
+
+        $this->app->singleton(SettingsManager::class,function ($app) use ($settingsManager){
+            return $settingsManager;
         });
 
-
-        Setting::resolved(function ($settingsManager){
-            $settingsManager->registerDriver('eloquent',function ($app){
-                return new EloquentRepository();
+        Setting::resolved(function ($settingsManager) use($cacheManager){
+            $settingsManager->registerDriver('eloquent',function ($app) use ($cacheManager){
+                return new EloquentRepository($cacheManager);
             });
         });
 
@@ -37,20 +55,7 @@ class SettingsManagerServiceProvider extends ServiceProvider
                 return new APIRepository();
             });
         });
-    }
 
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
-
-        $this->publishes([
-            __DIR__.'/../../database/migrations/' => database_path('migrations')
-        ], 't4s-settings');
     }
 
     public function provides()

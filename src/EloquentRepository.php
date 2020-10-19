@@ -12,8 +12,17 @@ class EloquentRepository extends SettingsRepository
 
     protected function loadSettings()
     {
-        foreach (Setting::all() as $setting)
-        $this->settings[$setting->key] = $setting;
+
+        if($this->settings === null)
+        {
+            $this->settings = $this->cache->remember($this->cacheKey,$this->cacheExpirationTime,function (){
+                $settings = [];
+                foreach (Setting::all() as $setting) {
+                    $settings[$setting->key] = $setting;
+                }
+                return $settings;
+            });
+        }
     }
 
     public function addScope($col, $value)
@@ -41,11 +50,13 @@ class EloquentRepository extends SettingsRepository
 
         $setting->save();
 
-        $this->settings[$key] = $setting;
+        $this->forgetCachedPermissions();
     }
 
     public function remove(string $key)
     {
         Setting::where('key',$key)->delete();
+
+        $this->forgetCachedPermissions();
     }
 }

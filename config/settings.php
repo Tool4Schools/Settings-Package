@@ -7,12 +7,12 @@ return [
       |-----------------------------------------------------------------------
       */
 
-    'defaults' =>[
-        'driver' =>'database',
+    'defaults' => [
+        'driver' => 'database',
     ],
 
-    'repositories' =>[
-        'database'=>[
+    'repositories' => [
+        'database' => [
             'driver' => 'eloquent',
             'model' => \Tools4Schools\Settings\Models\Setting::class,
         ],
@@ -31,9 +31,7 @@ return [
 
             'expiration_time' => \DateInterval::createFromDateString('24 hours'),
 
-            /*
-             * The cache key used to store all permissions.
-             */
+            // The cache key used to store all permissions.
 
             'key' => 'tools4Schools.settings.cache',
 

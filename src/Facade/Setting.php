@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Tools4Schools\Settings\Facade;
-
 
 use Illuminate\Support\Facades\Facade;
 use Tools4Schools\Settings\SettingsManager;

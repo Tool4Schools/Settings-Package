@@ -18,7 +18,7 @@ class CreateSettingsTable extends Migration
 
             $table->string('key');
             $table->text('value');
-            $table->enum('type',['bool','int','string'])->nullable();
+            $table->enum('type', ['bool', 'int', 'string'])->nullable();
             $table->timestamps();
         });
     }

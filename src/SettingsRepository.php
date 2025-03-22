@@ -1,9 +1,7 @@
 <?php
 
-
 namespace Tools4Schools\Settings;
 
-use ArrayAccess;
 use Illuminate\Cache\CacheManager;
 use Tools4Schools\Settings\Contracts\Repository;
 
@@ -18,13 +16,13 @@ abstract class SettingsRepository implements Repository
     protected $settings;
 
     /** @var \DateInterval|int */
-    protected  $cacheExpirationTime;
+    protected $cacheExpirationTime;
 
     /** @var string */
-    protected  $cacheKey;
+    protected $cacheKey;
 
     /** @var string */
-    protected  $cacheModelKey;
+    protected $cacheModelKey;
 
     public function __construct(CacheManager $cacheManager)
     {
@@ -43,8 +41,6 @@ abstract class SettingsRepository implements Repository
 
         $this->cache = $this->getCacheStoreFromConfig();
     }
-
-
 
     protected function getCacheStoreFromConfig(): \Illuminate\Contracts\Cache\Repository
     {
@@ -75,21 +71,21 @@ abstract class SettingsRepository implements Repository
     }
 
     /**
-     * @param string $key
+     * @param  string  $key
      * @return bool
      */
-    public function has(string $key){
-        if(is_null($this->settings))
-        {
+    public function has(string $key)
+    {
+        if(is_null($this->settings)) {
             $this->loadSettings();
         }
+
         return isset($this->settings[$key]);
     }
 
-    public function getModel(string $name,$default = null)
+    public function getModel(string $name, $default = null)
     {
-        if(is_null($this->settings))
-        {
+        if(is_null($this->settings)) {
             $this->loadSettings();
         }
 
@@ -98,10 +94,9 @@ abstract class SettingsRepository implements Repository
         }
     }
 
-    public function get(string $name,$default = null)
+    public function get(string $name, $default = null)
     {
-        if(is_null($this->settings))
-        {
+        if(is_null($this->settings)) {
             $this->loadSettings();
         }
 
@@ -112,20 +107,18 @@ abstract class SettingsRepository implements Repository
 
     public function all()
     {
-        if(is_null($this->settings))
-        {
+        if(is_null($this->settings)) {
             $this->loadSettings();
         }
 
         return $this->settings;
     }
 
-
-    abstract public function set(string $key, $value = null,$type = null);
+    abstract public function set(string $key, $value = null, $type = null);
 
     abstract public function remove(string $key);
 
     abstract protected function loadSettings();
 
-    abstract public function addScope($col,$value);
+    abstract public function addScope($col, $value);
 }

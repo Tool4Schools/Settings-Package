@@ -1,9 +1,7 @@
 <?php
 
-
 namespace Tools4Schools\Settings;
 
-use Illuminate\Cache\CacheManager;
 use Illuminate\Foundation\Application;
 use InvalidArgumentException;
 
@@ -16,9 +14,8 @@ class SettingsManager
      */
     protected $app;
 
-
     /**
-     * The array of created drivers
+     * The array of created drivers.
      *
      * @var array
      */
@@ -37,12 +34,12 @@ class SettingsManager
 
     public function driver($name = null)
     {
-        $name = $name?: $this->getDefaultDriver();
+        $name = $name ?: $this->getDefaultDriver();
 
         return $this->drivers[$name] ?? $this->drivers[$name] = $this->resolve($name);
     }
 
-    public function registerDriver($driver,\Closure $callback)
+    public function registerDriver($driver, \Closure $callback)
     {
         $this->customRepositoryCreators[$driver] = $callback;
 

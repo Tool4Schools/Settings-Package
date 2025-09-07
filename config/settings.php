@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     /*
       |-----------------------------------------------------------------------
@@ -8,13 +10,16 @@ return [
       */
 
     'defaults' => [
-        'driver' => 'database',
+        'driver' => env('SETTINGS_DRIVER', 'database'), // database|api
     ],
 
     'repositories' => [
         'database' => [
             'driver' => 'eloquent',
-            'model' => \Tools4Schools\Settings\Models\Setting::class,
+            'model' => [
+               'field' => \Tools4Schools\Settings\Models\SettingField::class,
+                'value' => \Tools4Schools\Settings\Models\SettingValue::class,
+                ],
         ],
 
         'api' => [
@@ -23,6 +28,13 @@ return [
         ],
 
         'cache' => [
+            /*
+             * You may optionally indicate a specific cache driver to use for permission and
+             * role caching using any of the `store` drivers listed in the cache.php config
+             * file. Using 'default' here means to use the `default` set in cache.php.
+             */
+
+            'store' => env('SETTINGS_CACHE_STORE', 'default'),
 
             /*
              * By default all permissions are cached for 24 hours to speed up performance.
@@ -33,26 +45,18 @@ return [
 
             // The cache key used to store all permissions.
 
-            'key' => 'tools4Schools.settings.cache',
+            'prefix'   => env('SETTINGS_CACHE_PREFIX', 'settings'),
 
-            /*
-             * When checking for a permission against a model by passing a Permission
-             * instance to the check, this key determines what attribute on the
-             * Permissions model is used to cache against.
-             *
-             * Ideally, this should match your preferred way of checking permissions, eg:
-             * `$user->can('view-posts')` would be 'name'.
-             */
+            'use_tags' => env('SETTINGS_CACHE_USE_TAGS', true),
 
-            'model_key' => 'key',
-
-            /*
-             * You may optionally indicate a specific cache driver to use for permission and
-             * role caching using any of the `store` drivers listed in the cache.php config
-             * file. Using 'default' here means to use the `default` set in cache.php.
-             */
-
-            'store' => 'default',
+            'api' => [
+                'base_uri' => env('SETTINGS_API_BASE_URI'),
+                'timeout'  => env('SETTINGS_API_TIMEOUT', 5.0),
+                'auth'     => [
+                    'type'  => env('SETTINGS_API_AUTH', 'bearer'), // bearer|none
+                    'token' => env('SETTINGS_API_TOKEN'),
+                ],
+            ],
         ],
     ],
 ];

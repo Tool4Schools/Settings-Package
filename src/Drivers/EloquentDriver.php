@@ -1,11 +1,12 @@
 <?php
 
-namespace Tools4Schools\Settings;
+namespace Tools4Schools\Settings\Drivers;
 
 use Illuminate\Database\Query\Builder;
-use Tools4Schools\Settings\Models\Setting;
+use Tools4Schools\Settings\Models\SettingField;
+use Tools4Schools\Settings\Drivers\SettingsDriver;
 
-class EloquentRepository extends SettingsRepository
+class EloquentDriver extends SettingsDriver
 {
     protected function loadSettings()
     {
@@ -13,7 +14,7 @@ class EloquentRepository extends SettingsRepository
         if($this->settings === null) {
             $this->settings = $this->cache->remember($this->cacheKey, $this->cacheExpirationTime, function () {
                 $settings = [];
-                foreach (Setting::all() as $setting) {
+                foreach (SettingField::all() as $setting) {
                     $settings[$setting->key] = $setting;
                 }
 
@@ -24,17 +25,17 @@ class EloquentRepository extends SettingsRepository
 
     public function addScope($col, $value)
     {
-        Setting::addGlobalScope($col, function (Builder $builder) use ($col, $value) {
+        SettingField::addGlobalScope($col, function (Builder $builder) use ($col, $value) {
             $builder->whereNull($col)->orWhere($col, $value);
         });
     }
 
-    public function set(string $key, $value = null, $type = null)
+    public function set(string $name, $value = null, $type = null,bool $secure = false): void
     {
-        $setting = new Setting(['key' => $key, 'value' => null]);
+        $setting = new SettingField(['name' => $name, 'value' => null]);
 
-        if($this->has($key)) {
-            $setting = $this->getModel($key);
+        if($this->has($name)) {
+            $setting = $this->getModel($name);
         }
         $setting->value = $value;
 
@@ -47,9 +48,9 @@ class EloquentRepository extends SettingsRepository
         $this->forgetCachedPermissions();
     }
 
-    public function remove(string $key)
+    public function remove(string $name): void
     {
-        Setting::where('key', $key)->delete();
+        SettingField::where('name', $name)->delete();
 
         $this->forgetCachedPermissions();
     }

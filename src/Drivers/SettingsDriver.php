@@ -1,11 +1,14 @@
 <?php
 
-namespace Tools4Schools\Settings;
+declare(strict_types=1);
+
+namespace Tools4Schools\Settings\Drivers;
 
 use Illuminate\Cache\CacheManager;
 use Tools4Schools\Settings\Contracts\Repository;
+use Tools4Schools\Settings\Contracts\SettingsDriver as SettingsDriverInterface;
 
-abstract class SettingsRepository implements Repository
+abstract class SettingsDriver implements SettingsDriverInterface
 {
     /** @var \Illuminate\Contracts\Cache\Repository */
     protected $cache;
@@ -63,7 +66,7 @@ abstract class SettingsRepository implements Repository
     /**
      * Flush the cache.
      */
-    public function forgetCachedPermissions()
+    public function forgetCached(): bool
     {
         $this->settings = null;
 
@@ -74,7 +77,7 @@ abstract class SettingsRepository implements Repository
      * @param  string  $key
      * @return bool
      */
-    public function has(string $key)
+    public function has(string $key): bool
     {
         if(is_null($this->settings)) {
             $this->loadSettings();
@@ -83,7 +86,7 @@ abstract class SettingsRepository implements Repository
         return isset($this->settings[$key]);
     }
 
-    public function getModel(string $name, $default = null)
+    protected function getModel(string $name, $default = null)
     {
         if(is_null($this->settings)) {
             $this->loadSettings();
@@ -103,9 +106,11 @@ abstract class SettingsRepository implements Repository
         if (! is_null($this->settings[$name])) {
             return $this->settings[$name]->value;
         }
+
+        return $default;
     }
 
-    public function all()
+    public function all(): array
     {
         if(is_null($this->settings)) {
             $this->loadSettings();
@@ -114,9 +119,9 @@ abstract class SettingsRepository implements Repository
         return $this->settings;
     }
 
-    abstract public function set(string $key, $value = null, $type = null);
+    abstract public function set(string $name, $value = null, $type = null,bool $secure = false): void;
 
-    abstract public function remove(string $key);
+    abstract public function remove(string $name): void;
 
     abstract protected function loadSettings();
 

@@ -16,10 +16,10 @@ return [
     'repositories' => [
         'database' => [
             'driver' => 'eloquent',
-            'model' => [
-               'field' => \Tools4Schools\Settings\Models\SettingField::class,
+            'models' => [
+                'field' => \Tools4Schools\Settings\Models\SettingField::class,
                 'value' => \Tools4Schools\Settings\Models\SettingValue::class,
-                ],
+            ],
         ],
 
         'api' => [
@@ -45,15 +45,15 @@ return [
 
             // The cache key used to store all permissions.
 
-            'prefix'   => env('SETTINGS_CACHE_PREFIX', 'settings'),
+            'prefix' => env('SETTINGS_CACHE_PREFIX', 'settings'),
 
             'use_tags' => env('SETTINGS_CACHE_USE_TAGS', true),
 
             'api' => [
                 'base_uri' => env('SETTINGS_API_BASE_URI'),
-                'timeout'  => env('SETTINGS_API_TIMEOUT', 5.0),
-                'auth'     => [
-                    'type'  => env('SETTINGS_API_AUTH', 'bearer'), // bearer|none
+                'timeout' => env('SETTINGS_API_TIMEOUT', 5.0),
+                'auth' => [
+                    'type' => env('SETTINGS_API_AUTH', 'bearer'), // bearer|none
                     'token' => env('SETTINGS_API_TOKEN'),
                 ],
             ],

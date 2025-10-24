@@ -8,5 +8,6 @@ readonly class SettingsChanged
 {
     public function __construct(
         public array $keys
-    ) {}
+    ) {
+    }
 }

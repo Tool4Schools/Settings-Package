@@ -3,20 +3,19 @@
 namespace Tools4Schools\Settings\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Tools4Schools\Settings\Console\MakeSettingFieldCommand;
 use Tools4Schools\Settings\SettingsManager;
 
 class SettingsServiceProvider extends ServiceProvider
 {
-
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../../config/settings.php', 'settings'
         );
 
-        $this->app->singleton('settings',fn($app)=>new SettingsManager($app));
+        $this->app->singleton('settings', fn ($app) => new SettingsManager($app));
 
     }
-
 
     public function boot(): void
     {

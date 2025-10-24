@@ -13,9 +13,9 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up():void
+    public function up(): void
     {
-        Schema::create('settings_fields', function (Blueprint $table) {
+        Schema::create('settings_fields', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->string('namespace');
             $table->string('name');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->json('meta')->nullable();
             $table->boolean('secure')->default(false);
             $table->timestamps();
-            $table->unique(['namespace','name']);
+            $table->unique(['namespace', 'name']);
         });
     }
 

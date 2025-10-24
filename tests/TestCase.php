@@ -4,6 +4,7 @@ namespace Tools4Schools\Settings\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 use Tools4Schools\Settings\Providers\SettingsServiceProvider;
+
 abstract class TestCase extends Orchestra
 {
     protected function getPackageProviders($app)
@@ -15,9 +16,9 @@ abstract class TestCase extends Orchestra
     {
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
 
         $app['config']->set('settings.driver', 'database');

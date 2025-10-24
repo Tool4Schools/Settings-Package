@@ -1,17 +1,18 @@
 <?php
+
 use Illuminate\Support\Facades\Http;
 use Tools4Schools\Settings\Facades\Settings;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('settings.driver', 'api');
     config()->set('settings.api.base_uri', 'https://settings.example');
     config()->set('settings.cache.use_tags', false);
 });
 
-it('reads via API and hydrates namespace cache', function () {
+it('reads via API and hydrates namespace cache', function (): void {
     Http::fake([
         'https://settings.example/settings*' => Http::response([
-            'mail' => ['from' => 'noreply@example.com', 'driver'=>'smtp'],
+            'mail' => ['from' => 'noreply@example.com', 'driver' => 'smtp'],
         ], 200),
     ]);
 
@@ -23,15 +24,15 @@ it('reads via API and hydrates namespace cache', function () {
     expect($v)->toBe('noreply@example.com');
 });
 
-it('sets via API and refreshes cache', function () {
+it('sets via API and refreshes cache', function (): void {
     Http::fake([
-        'https://settings.example/settings'      => Http::response(['value'=>'admin@school.edu'], 200),
-        'https://settings.example/settings*'     => Http::response([
+        'https://settings.example/settings' => Http::response(['value' => 'admin@school.edu'], 200),
+        'https://settings.example/settings*' => Http::response([
             'mail' => ['from' => 'admin@school.edu'],
         ], 200),
-        'https://settings.example/settings/show*'=> Http::response([
-            'found'=>true,'value'=>'admin@school.edu','namespace'=>'mail','bucket'=>['from'=>'admin@school.edu']
-        ],200),
+        'https://settings.example/settings/show*' => Http::response([
+            'found' => true, 'value' => 'admin@school.edu', 'namespace' => 'mail', 'bucket' => ['from' => 'admin@school.edu'],
+        ], 200),
     ]);
 
     $v = Settings::driver()->set(null, 'mail.from', 'admin@school.edu');

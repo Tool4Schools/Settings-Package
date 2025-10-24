@@ -22,7 +22,7 @@
     "illuminate/http": "^12.0"
   },
     "require-dev": {
-      "orchestra/testbench": "^9.0",
+      "orchestra/testbench": "^10.0",
       "pestphp/pest": "^3.0",
       "pestphp/pest-plugin-laravel": "^3.0",
       "mockery/mockery": "^1.6"
@@ -32,8 +32,13 @@
       "Tools4Schools\\Settings\\": "src/"
     },
     "files": [
-      "src/Helpers/helpers.php"
+      "src/Helpers/helper.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tools4Schools\\Settings\\Tests\\": "tests"
+    }
   },
 
   "extra": {
@@ -48,7 +53,10 @@
   },
 
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   },
   "minimum-stability": "stable"
 }

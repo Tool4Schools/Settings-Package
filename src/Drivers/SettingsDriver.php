@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tools4Schools\Settings\Drivers;
 
 use Illuminate\Cache\CacheManager;
-use Tools4Schools\Settings\Contracts\Repository;
 use Tools4Schools\Settings\Contracts\SettingsDriver as SettingsDriverInterface;
 
 abstract class SettingsDriver implements SettingsDriverInterface
@@ -119,7 +118,7 @@ abstract class SettingsDriver implements SettingsDriverInterface
         return $this->settings;
     }
 
-    abstract public function set(string $name, $value = null, $type = null,bool $secure = false): void;
+    abstract public function set(string $name, $value = null, $type = null, bool $secure = false): void;
 
     abstract public function remove(string $name): void;
 

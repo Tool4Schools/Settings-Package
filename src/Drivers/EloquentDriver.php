@@ -4,7 +4,6 @@ namespace Tools4Schools\Settings\Drivers;
 
 use Illuminate\Database\Query\Builder;
 use Tools4Schools\Settings\Models\SettingField;
-use Tools4Schools\Settings\Drivers\SettingsDriver;
 
 class EloquentDriver extends SettingsDriver
 {
@@ -25,12 +24,12 @@ class EloquentDriver extends SettingsDriver
 
     public function addScope($col, $value)
     {
-        SettingField::addGlobalScope($col, function (Builder $builder) use ($col, $value) {
+        SettingField::addGlobalScope($col, function (Builder $builder) use ($col, $value): void {
             $builder->whereNull($col)->orWhere($col, $value);
         });
     }
 
-    public function set(string $name, $value = null, $type = null,bool $secure = false): void
+    public function set(string $name, $value = null, $type = null, bool $secure = false): void
     {
         $setting = new SettingField(['name' => $name, 'value' => null]);
 

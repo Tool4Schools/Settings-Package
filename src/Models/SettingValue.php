@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tools4Schools\Settings\Models;
 
-
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +15,7 @@ class SettingValue extends Model
     use HasFactory;
     use HasUuids;
 
-    protected $table = 'setting_values';
+    protected $table = 'settings_values';
 
     protected $fillable = [
         'setting_id',
@@ -39,19 +38,20 @@ class SettingValue extends Model
                 if (($this->setting->secure ?? false)) {
                     try {
                         $value = Crypt::decryptString($value);
-                    }catch (\Exception $exception){
+                    }catch (\Exception $exception) {
                         // fallback to raw value
                     }
                 }
+
                 return match ($this->setting->type ?? null) {
                     'bool' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
-                    'int' => (int)$value,
+                    'int' => (int) $value,
                     'json' => json_decode($value, true),
                     default => $value,
                 };
             },
             set: function ($value, array $attributes): string {
-                $encoded = is_array($value) ? json_encode($value) : (string)$value;
+                $encoded = is_array($value) ? json_encode($value) : (string) $value;
 
                 return ($this->setting->secure ?? false)
                     ? Crypt::encryptString($encoded)

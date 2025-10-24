@@ -1,58 +1,48 @@
-name: tests
+name: Tests
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: ['push', 'pull_request']
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        php: [8.4]
+        dependency-version: [prefer-lowest, prefer-stable]
+
+    name: Tests P${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
-          tools: composer:v2
-          coverage: xdebug
+          php-version: ${{ matrix.php }}
+          extensions: dom, mbstring, zip
+          coverage: none
 
-      - name: Install Aspell
+      - name: Get Composer cache directory
+        id: composer-cache
         shell: bash
-        run: |
-          if [[ "$RUNNER_OS" == "Linux" ]]; then
-           sudo apt-get update && sudo apt-get install -y aspell aspell-en
-          elif [[ "$RUNNER_OS" == "macOS" ]]; then
-           brew install aspell
-          fi
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Cache dependencies
+        uses: actions/cache@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: dependencies-php-${{ matrix.php }}-os-${{ matrix.os }}-version-${{ matrix.dependency-version }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: dependencies-php-${{ matrix.php }}-os-${{ matrix.os }}-version-${{ matrix.dependency-version }}-composer-
 
-      - name: Install Node Dependencies
-        run: npm install
+      - name: Set Version
+        run: composer config version "dev-main"
 
-      - name: Build Assets
-        run: npm run build
+      - name: Install Composer dependencies
+        run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-dist
 
-      - name: Install Dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Copy Environment File
-        run: cp .env.example .env
-
-      - name: Generate Application Key
-        run: php artisan key:generate
-
-      - name: Tests
-        run: composer test
+      - name: Integration Tests
+        run: php ./vendor/bin/pest
